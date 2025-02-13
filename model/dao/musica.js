@@ -29,6 +29,15 @@ const insertMusica = async function(musica){
                                         ${musica.foto_capa},
                                         ${musica.letra}
                                         )`
+
+    //executa o script SQL no DB e aguarda o retorno do DB
+    let result = await prisma.$exeuteRawUnsafe(sql)
+
+    if(result){
+        return true
+    }else{
+        return false
+    }
 }
 
 //função para atualizar uma música existente no banco de dados
