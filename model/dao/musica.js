@@ -10,32 +10,36 @@ const { PrismaClient } = require('@prisma/client')
 
 //função para inserir uma nova música no banco de dados
 const insertMusica = async function(musica){
+    try {
+        //instanciando (criar um novo objeto) para realizar a manipulação do script SQL
+        const prisma = new PrismaClient()
 
-    //instanciando (criar um novo objeto) para realizar a manipulação do script SQL
-    const prisma = new PrismaClient()
+        let sql = `insert into tbl_musica ( nome,
+                                            link,
+                                            duracao,
+                                            data_lancamento,
+                                            foto_capa,
+                                            letra
+                                            )
+                                    values (
+                                            '${musica.nome}',
+                                            '${musica.link}',
+                                            '${musica.duracao}',
+                                            '${musica.data_lancamento}',
+                                            '${musica.foto_capa}',
+                                            '${musica.letra}'
+                                            )`
 
-    let sql = `insert into tbl_musica ( nome,
-                                        link,
-                                        duracao,
-                                        data_lancamento,
-                                        foto_capa,
-                                        letra
-                                        )
-                                values (
-                                        '${musica.nome}',
-                                        '${musica.link}',
-                                        '${musica.duracao}',
-                                        '${musica.data_lancamento}',
-                                        '${musica.foto_capa}',
-                                        '${musica.letra}'
-                                        )`
+        //executa o script SQL no DB e aguarda o retorno do DB
+        let result = await prisma.$executeRawUnsafe(sql)
 
-    //executa o script SQL no DB e aguarda o retorno do DB
-    let result = await prisma.$executeRawUnsafe(sql)
+        if(result)
+            return true
+        else
+            return false
+        
 
-    if(result){
-        return true
-    }else{
+    } catch (error) {
         return false
     }
 }
