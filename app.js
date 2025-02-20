@@ -27,6 +27,12 @@ const express = require('express')
 const cors = require('cors')
 const bodyParser = require('body-parser')
 
+//import das controllers do projeto
+const controllerMusica = require('./controller/musica/controllerMusica.js')
+
+//criando formato de dados que será recebido no body da requisição (POST/PUT)
+const bodyParserJSON = bodyParser.json()
+
 //criando o objeto app para criar a API
 const app = express()
 
@@ -40,6 +46,17 @@ app.use((request, response, next)=>{
 })
 
 //endpoint para inserir uma música
-app.post('/v1/controle-musicas/musica', cors(), async function(request, response){
+app.post('/v1/controle-musicas/musica', cors(), bodyParserJSON, async function(request, response){
 
+    //recebe os dados encaminhados no body da requisição
+    let dadosBody = request.body
+
+    let result = await controllerMusica.inserirMusica(dadosBody)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+app.listen(8080, function(){
+    console.log('Servidor aguardando novas requisições...')
 })

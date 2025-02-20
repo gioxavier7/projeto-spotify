@@ -31,7 +31,7 @@ const insertMusica = async function(musica){
                                         )`
 
     //executa o script SQL no DB e aguarda o retorno do DB
-    let result = await prisma.$exeuteRawUnsafe(sql)
+    let result = await prisma.$executeRawUnsafe(sql)
 
     if(result){
         return true
