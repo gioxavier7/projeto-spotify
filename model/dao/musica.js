@@ -22,12 +22,12 @@ const insertMusica = async function(musica){
                                         letra
                                         )
                                 values (
-                                        ${musica.nome},
-                                        ${musica.link},
-                                        ${musica.duracao},
-                                        ${musica.data_lancamento},
-                                        ${musica.foto_capa},
-                                        ${musica.letra}
+                                        '${musica.nome}',
+                                        '${musica.link}',
+                                        '${musica.duracao}',
+                                        '${musica.data_lancamento}',
+                                        '${musica.foto_capa}',
+                                        '${musica.letra}'
                                         )`
 
     //executa o script SQL no DB e aguarda o retorno do DB
