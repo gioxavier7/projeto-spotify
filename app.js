@@ -48,10 +48,23 @@ app.use((request, response, next)=>{
 //endpoint para inserir uma música
 app.post('/v1/controle-musicas/musica', cors(), bodyParserJSON, async function(request, response){
 
+    //recebe o content type da requisição para validar o formao de dados
+    let contentType = request.headers['content-type']
+
     //recebe os dados encaminhados no body da requisição
     let dadosBody = request.body
 
-    let result = await controllerMusica.inserirMusica(dadosBody)
+    let result = await controllerMusica.inserirMusica(dadosBody, contentType)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+//endpoint para retornar lista de musicas
+app.get('/v1/controle-musicas/musica', cors(), async function(request, response){
+
+    //chama a função para retornar uma lista de musicas
+    let result = await controllerMusica.listarMusica()
 
     response.status(result.status_code)
     response.json(result)

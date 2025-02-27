@@ -10,10 +10,15 @@ const MESSAGE = require('../../modulo/config.js')
 
 //import do arquivo DAO de música para manipular o db
 const musicaDAO = require('../../model/dao/musica.js')
+const { json } = require('body-parser')
 
 //função para inserir uma nova música
-const inserirMusica = async function(musica){
+const inserirMusica = async function(musica, contentType){
+    // try catch é uma forma de tratar o código para que a API não caia
     try {
+
+        if(String(contentType) .toLowerCase() == 'application/json')
+        {
         if (musica.nome == undefined || musica.nome == '' || musica.nome == null || musica.nome.length > 80 ||
             musica.link == undefined || musica.link == '' || musica.link == null || musica.link.length > 200 ||
             musica.duracao == undefined || musica.duracao == '' || musica.duracao == null || musica.duracao.length > 5 ||
@@ -30,6 +35,9 @@ const inserirMusica = async function(musica){
             else
                 return MESSAGE.ERROR_INTERNAL_SERVER_MODEL //500
         }
+    }else{
+        return MESSAGE.ERROR_CONTENT_TYPE //415
+    }
 
     } catch (error) {
         return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER //500
@@ -48,7 +56,31 @@ const excluirMusica = async function(){
 
 //função para retornar todas as música
 const listarMusica = async function(){
+    try {
+        let dadosMusica = {}
 
+        //chamar a função que retorna as musicas
+        let resultMusica = await musicaDAO.selectAllMusica()
+
+        if(resultMusica != false || typeof(resultMusica) == 'object')
+        {
+            //criando um objeto JSON para retornar a lista de musicas
+            if(resultMusica.length > 0){
+                dadosMusica.status = true
+                dadosMusica.status_code = 200
+                dadosMusica.item = resultMusica.length
+                dadosMusica.musicas = resultMusica
+                return dadosMusica //200
+            }else{
+                return MESSAGE.ERROR_NOT_FOUND //404
+            }
+        }else{
+            return MESSAGE.ERROR_INTERNAL_SERVER_MODEL //500
+        }
+
+    } catch (error) {
+        return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER //500
+    }
 }
 
 //função para listar uma música pelo ID
