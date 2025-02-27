@@ -70,6 +70,12 @@ app.get('/v1/controle-musicas/musica', cors(), async function(request, response)
     response.json(result)
 })
 
+app.get('/v1/controle-musicas/musica:id', cors(), async function(request, response){
+
+    let idMusica = request.params.id
+
+})
+
 app.listen(8080, function(){
     console.log('Servidor aguardando novas requisições...')
 })

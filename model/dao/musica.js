@@ -73,8 +73,22 @@ const selectAllMusica = async function(){
 }
 
 //função para listar uma música pelo ID no banco de dados
-const selectByIdMusica = async function(){
+const selectByIdMusica = async function(id){
+    try {
+        //script sql
+        let sql = 'select id from tbl_musica order by id desc'
 
+        //executa o script
+        let result = await prisma.$queryRawUnsafe(sql)
+
+        if(result)
+            return result
+        else
+            return false
+
+    } catch (error) {
+        return false
+    }
 }
 
 module.exports = {

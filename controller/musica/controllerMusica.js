@@ -85,7 +85,27 @@ const listarMusica = async function(){
 
 //função para listar uma música pelo ID
 const buscarMusica = async function(){
+    try {
+        let dadosMusica = {}
+        let resultMusica = await musicaDAO.selectByIdMusica()
 
+        if(resultMusica != false || typeof(resultMusica) == 'object')
+        {
+            if(resultMusica.length > 0){
+                dadosMusica.status = true
+                dadosMusica.status_code = 200
+                dadosMusica.musicas = resultMusica
+                return dadosMusica //200
+            }else{
+                return MESSAGE.ERROR_NOT_FOUND //404
+            }
+        }else{
+            return MESSAGE.ERROR_INTERNAL_SERVER_MODEL
+        }
+    
+    } catch (error) {
+        return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER
+    }
 }
 
 module.exports = {
