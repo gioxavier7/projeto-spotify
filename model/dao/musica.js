@@ -76,10 +76,10 @@ const selectAllMusica = async function(){
 const selectByIdMusica = async function(id){
     try {
         //script sql
-        let sql = 'select id from tbl_musica order by id desc'
+        let sql = 'select * from tbl_musica where id = ?'
 
         //executa o script
-        let result = await prisma.$queryRawUnsafe(sql)
+        let result = await prisma.$queryRawUnsafe(sql, id)
 
         if(result)
             return result

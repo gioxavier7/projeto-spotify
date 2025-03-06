@@ -84,14 +84,14 @@ const listarMusica = async function(){
 }
 
 //função para listar uma música pelo ID
-const buscarMusica = async function(){
+const buscarMusica = async function(id){
     try {
         let dadosMusica = {}
-        let resultMusica = await musicaDAO.selectByIdMusica()
+        let resultMusica = await musicaDAO.selectByIdMusica(id)
 
         if(resultMusica != false || typeof(resultMusica) == 'object')
         {
-            if(resultMusica.length > 0){
+            if(resultMusica){
                 dadosMusica.status = true
                 dadosMusica.status_code = 200
                 dadosMusica.musicas = resultMusica

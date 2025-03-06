@@ -74,6 +74,11 @@ app.get('/v1/controle-musicas/musica:id', cors(), async function(request, respon
 
     let idMusica = request.params.id
 
+    let result = await controllerMusica.buscarMusica(idMusica)
+
+    response.status(result.status_code)
+    response.json(result)
+
 })
 
 app.listen(8080, function(){
