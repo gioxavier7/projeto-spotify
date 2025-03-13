@@ -50,8 +50,22 @@ const updateMusica = async function(){
 }
 
 //função para excluir uma música existente no banco de dados
-const deleteMusica = async function(){
+const deleteMusica = async function(id){
+    try {
+        //script sql
+        let sql = 'delete from tbl_musica where id='+id
 
+        //executa o script
+        let result = await prisma.$executeRawUnsafe(sql)
+
+        if(result)
+            return true
+        else
+            return false
+
+    } catch (error) {
+        return false
+    }
 }
 
 //função para retornar todas as músicas do banco de dados
@@ -76,10 +90,10 @@ const selectAllMusica = async function(){
 const selectByIdMusica = async function(id){
     try {
         //script sql
-        let sql = 'select * from tbl_musica where id = ?'
+        let sql = 'select * from tbl_musica where id='+id
 
         //executa o script
-        let result = await prisma.$queryRawUnsafe(sql, id)
+        let result = await prisma.$queryRawUnsafe(sql)
 
         if(result)
             return result

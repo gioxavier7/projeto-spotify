@@ -70,7 +70,8 @@ app.get('/v1/controle-musicas/musica', cors(), async function(request, response)
     response.json(result)
 })
 
-app.get('/v1/controle-musicas/musica:id', cors(), async function(request, response){
+//endpoint para buscar uma música pelo id
+app.get('/v1/controle-musicas/musica/:id', cors(), async function(request, response){
 
     let idMusica = request.params.id
 
