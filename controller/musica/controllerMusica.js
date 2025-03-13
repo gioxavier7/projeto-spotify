@@ -45,8 +45,45 @@ const inserirMusica = async function(musica, contentType){
 }
 
 //função para atualizar uma música existente
-const atualizarMusica = async function(){
+const atualizarMusica = async function(musica, id, contentType){
+    try {
+        if(String(contentType) .toLowerCase() == 'application/json')
+            {
+            if (musica.nome == undefined || musica.nome == '' || musica.nome == null || musica.nome.length > 80 ||
+                musica.link == undefined || musica.link == '' || musica.link == null || musica.link.length > 200 ||
+                musica.duracao == undefined || musica.duracao == '' || musica.duracao == null || musica.duracao.length > 5 ||
+                musica.data_lancamento == undefined || musica.data_lancamento == '' || musica.data_lancamento == null || musica.data_lancamento.length > 10 ||
+                musica.foto_capa == undefined || musica.foto_capa.length > 200 ||
+                musica.letra == undefined || id == '' || id == undefined || id == null || isNaN(id) || id <= 0
+            ){
+                return MESSAGE.ERROR_REQUIRE_FIELDS //400
+            }else{
+                //validar se o id existe no db
+                let resultMusica = await buscarMusica(id)
 
+                if(resultMusica.status_code == 200){
+                    //update
+                    musica.id = id //adiciona o atributo id no json e coloca o id da música que chegou na controller
+                    let result = await musicaDAO.updateMusica(musica)
+
+                    if(result){
+                        return MESSAGE.SUCCESS_UPDATED_ITEM //200
+                    }else{
+                        return MESSAGE.ERROR_INTERNAL_SERVER_MODEL //500
+                    }
+
+                }else if(resultMusica.status_code == 404){
+                    return MESSAGE.ERROR_NOT_FOUND //404
+                }else{
+                    return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER //500
+                }
+            }
+        }else{
+            return MESSAGE.ERROR_CONTENT_TYPE //415
+        }
+    } catch (error) {
+        return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER //500
+    }
 }
 
 //função para excluir uma música existente

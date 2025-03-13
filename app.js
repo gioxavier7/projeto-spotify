@@ -91,6 +91,22 @@ app.delete('/v1/controle-musicas/musica/:id', cors(), async function(request, re
     response.json(result)
 })
 
+app.put('/v1/controle-musicas/musica/:id', cors(), bodyParserJSON, async function(request, response){
+    //recebe o content type da requisição
+    let contentType = request.headers['content-type']
+
+    //recebe o id da música
+    let idMusica = request.params.id
+
+    //recebe os dados do body
+    let dadosBody = request.body
+
+    let result = await controllerMusica.atualizarMusica(dadosBody, idMusica, contentType)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
 app.listen(8080, function(){
     console.log('Servidor aguardando novas requisições...')
 })
