@@ -54,7 +54,7 @@ const deleteMusica = async function(id){
     try {
         //script sql
         let sql = 'delete from tbl_musica where id='+id
-
+        
         //executa o script
         let result = await prisma.$executeRawUnsafe(sql)
 

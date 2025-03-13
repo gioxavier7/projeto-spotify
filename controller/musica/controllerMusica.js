@@ -50,8 +50,31 @@ const atualizarMusica = async function(){
 }
 
 //função para excluir uma música existente
-const excluirMusica = async function(){
+const excluirMusica = async function(id){
+    try {
+        if(id == '' || id == undefined || id == null || isNaN(id) || id <= 0){
+            return MESSAGE.ERROR_REQUIRE_FIELDS //400
+        }else{
+            // validar se o ID existe
+            let resultMusica = await buscarMusica(id)
 
+            if(resultMusica.status_code == 200){
+                // delete da musica
+                let result = await musicaDAO.deleteMusica(id)
+                if(result){
+                    return MESSAGE.SUCCESS_DELETED_ITEM //200
+                }else{
+                    return MESSAGE.ERROR_INTERNAL_SERVER_MODEL //500
+                }
+            }else if(resultMusica.status_code == 404){
+                return MESSAGE.ERROR_NOT_FOUND //404
+            }else{
+                return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER //500
+            }
+        }
+    } catch (error) {
+        return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER //500
+    }
 }
 
 //função para retornar todas as música

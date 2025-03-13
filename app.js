@@ -82,6 +82,15 @@ app.get('/v1/controle-musicas/musica/:id', cors(), async function(request, respo
 
 })
 
+app.delete('/v1/controle-musicas/musica/:id', cors(), async function(request, response){
+    let idMusica = request.params.id
+
+    let result = await controllerMusica.excluirMusica(idMusica)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
 app.listen(8080, function(){
     console.log('Servidor aguardando novas requisições...')
 })
