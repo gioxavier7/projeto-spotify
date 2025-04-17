@@ -20,6 +20,12 @@ create table tbl_usuario(
   senha varchar(8) not null
 );
 
+create table tbl_artista(
+  id int primary key auto_increment,
+  nome varchar(50) not null,
+  biografia varchar(250)
+);
+
 show tables;
 desc tbl_musica;
 select * from tbl_musica;

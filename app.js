@@ -30,6 +30,7 @@ const bodyParser = require('body-parser')
 //import das controllers do projeto
 const controllerMusica = require('./controller/musica/controllerMusica.js')
 const controllerUsuario = require('./controller/usuario/controllerUsuario.js')
+const controllerArtista = require('./controller/artista/controllerArtista.js')
 
 //criando formato de dados que será recebido no body da requisição (POST/PUT)
 const bodyParserJSON = bodyParser.json()
@@ -172,6 +173,43 @@ app.delete('/v1/controle-musicas/usuario/:id', cors(), async function(request, r
 
     response.status(result.status_code)
     response.json(result)
+})
+
+//endpoint para inserir um artista
+app.post('/v1/controle-musicas/artista', cors(), bodyParserJSON, async function(request, response){
+
+    //recebe o content type da requisição para validar o formato de dados
+    let contentType = request.headers['content-type']
+
+    //recebe os dados encaminhados no body da requisição
+    let dadosBody = request.body
+
+    let result = await controllerArtista.inserirArtista(dadosBody, contentType)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+//endpoint para retornar lista de artista
+app.get('/v1/controle-musicas/artista', cors(), async function(request, response){
+
+    //chama a função para retornar uma lista de artista
+    let result = await controllerArtista.listarArtista()
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+//endpoint para buscar um usuario pelo id
+app.get('/v1/controle-musicas/artista/:id', cors(), async function(request, response){
+
+    let idArtista = request.params.id
+
+    let result = await controllerArtista.buscarArtista(idArtista)
+
+    response.status(result.status_code)
+    response.json(result)
+
 })
 
 app.listen(8080, function(){
