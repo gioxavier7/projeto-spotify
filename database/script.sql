@@ -12,6 +12,14 @@ create table tbl_musica(
   letra text
 );
 
+create table tbl_usuario(
+  id int primary key auto_increment,
+  nome varchar(50) not null,
+  username varchar(45) not null,
+  email varchar(75) not null,
+  senha varchar(8) not null
+);
+
 show tables;
 desc tbl_musica;
 select * from tbl_musica;

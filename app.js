@@ -29,6 +29,7 @@ const bodyParser = require('body-parser')
 
 //import das controllers do projeto
 const controllerMusica = require('./controller/musica/controllerMusica.js')
+const controllerUsuario = require('./controller/usuario/controllerUsuario.js')
 
 //criando formato de dados que será recebido no body da requisição (POST/PUT)
 const bodyParserJSON = bodyParser.json()
@@ -102,6 +103,21 @@ app.put('/v1/controle-musicas/musica/:id', cors(), bodyParserJSON, async functio
     let dadosBody = request.body
 
     let result = await controllerMusica.atualizarMusica(dadosBody, idMusica, contentType)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+//endpoint para inserir um usuario
+app.post('/v1/controle-musicas/usuario', cors(), bodyParserJSON, async function(request, response){
+
+    //recebe o content type da requisição para validar o formato de dados
+    let contentType = request.headers['content-type']
+
+    //recebe os dados encaminhados no body da requisição
+    let dadosBody = request.body
+
+    let result = await controllerUsuario.inserirUsuario(dadosBody, contentType)
 
     response.status(result.status_code)
     response.json(result)
