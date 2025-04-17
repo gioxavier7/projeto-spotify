@@ -79,8 +79,47 @@ const deleteUsuario = async function(id){
     }
 }
 
+//função para retornar todos os usuarios do banco de dados
+const selectAllUsuario = async function(){
+    try {
+        let sql = 'select * from tbl_usuario order by id desc'
+
+        //executa o script sql no db e aguarda o retorno dos dados
+        let result = await prisma.$queryRawUnsafe(sql)
+
+        if(result)
+            return result
+        else
+            return false
+
+    } catch (error) {
+        return false
+    }
+}
+
+//função para listar um usuário pelo ID no banco de dados
+const selectByIdUsuario = async function(id){
+    try {
+        //script sql
+        let sql = 'select * from tbl_usuario where id='+id
+
+        //executa o script
+        let result = await prisma.$queryRawUnsafe(sql)
+
+        if(result)
+            return result
+        else
+            return false
+
+    } catch (error) {
+        return false
+    }
+}
+
 module.exports = {
     insertUsuario,
     updateUsuario,
-    deleteUsuario
+    deleteUsuario,
+    selectAllUsuario,
+    selectByIdUsuario
 }

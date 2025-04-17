@@ -83,6 +83,7 @@ app.get('/v1/controle-musicas/musica/:id', cors(), async function(request, respo
 
 })
 
+// endpoint para deletar uma musica
 app.delete('/v1/controle-musicas/musica/:id', cors(), async function(request, response){
     let idMusica = request.params.id
 
@@ -92,6 +93,7 @@ app.delete('/v1/controle-musicas/musica/:id', cors(), async function(request, re
     response.json(result)
 })
 
+//endpoint pr atualizar uma musica
 app.put('/v1/controle-musicas/musica/:id', cors(), bodyParserJSON, async function(request, response){
     //recebe o content type da requisição
     let contentType = request.headers['content-type']
@@ -118,6 +120,55 @@ app.post('/v1/controle-musicas/usuario', cors(), bodyParserJSON, async function(
     let dadosBody = request.body
 
     let result = await controllerUsuario.inserirUsuario(dadosBody, contentType)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+//endpoint para retornar lista de usuarios
+app.get('/v1/controle-musicas/usuario', cors(), async function(request, response){
+
+    //chama a função para retornar uma lista de usuario
+    let result = await controllerUsuario.listarUsuario()
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+//endpoint para buscar um usuario pelo id
+app.get('/v1/controle-musicas/usuario/:id', cors(), async function(request, response){
+
+    let idUsuario = request.params.id
+
+    let result = await controllerUsuario.buscarUsuario(idUsuario)
+
+    response.status(result.status_code)
+    response.json(result)
+
+})
+
+//endpoint pr atualizar um usuário
+app.put('/v1/controle-musicas/usuario/:id', cors(), bodyParserJSON, async function(request, response){
+    //recebe o content type da requisição
+    let contentType = request.headers['content-type']
+
+    //recebe o id da música
+    let idUsuario = request.params.id
+
+    //recebe os dados do body
+    let dadosBody = request.body
+
+    let result = await controllerUsuario.atualizarUsuario(dadosBody, idUsuario, contentType)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+// endpoint para deletar um usuário
+app.delete('/v1/controle-musicas/usuario/:id', cors(), async function(request, response){
+    let idUsuario = request.params.id
+
+    let result = await controllerUsuario.excluirUsuario(idUsuario)
 
     response.status(result.status_code)
     response.json(result)
