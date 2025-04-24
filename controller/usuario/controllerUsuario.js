@@ -122,7 +122,7 @@ const atualizarUsuario = async function(usuario, id, contentType){
                     }else{
                         return MESSAGE.ERROR_INTERNAL_SERVER_MODEL //500
                     }
-                }else if(resultMusica.status_code == 404){
+                }else if(resultUsuario.status_code == 404){
                     return MESSAGE.ERROR_NOT_FOUND //404
                 }else{
                     return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER //500
@@ -146,7 +146,7 @@ const excluirUsuario = async function(id){
             let resultUsuario = await buscarUsuario(id)
 
             if(resultUsuario.status_code == 200){
-                // delete da musica
+                // delete do user
                 let result = await usuarioDAO.deleteUsuario(id)
                 if(result){
                     return MESSAGE.SUCCESS_DELETED_ITEM //200

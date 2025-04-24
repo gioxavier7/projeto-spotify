@@ -31,6 +31,8 @@ const bodyParser = require('body-parser')
 const controllerMusica = require('./controller/musica/controllerMusica.js')
 const controllerUsuario = require('./controller/usuario/controllerUsuario.js')
 const controllerArtista = require('./controller/artista/controllerArtista.js')
+const controllerBanda = require('./controller/banda/controllerBanda.js')
+
 
 //criando formato de dados que será recebido no body da requisição (POST/PUT)
 const bodyParserJSON = bodyParser.json()
@@ -210,6 +212,97 @@ app.get('/v1/controle-musicas/artista/:id', cors(), async function(request, resp
     response.status(result.status_code)
     response.json(result)
 
+})
+
+//endpoint pr atualizar um artista
+app.put('/v1/controle-musicas/artista/:id', cors(), bodyParserJSON, async function(request, response){
+    //recebe o content type da requisição
+    let contentType = request.headers['content-type']
+
+    //recebe o id da música
+    let idArtista = request.params.id
+
+    //recebe os dados do body
+    let dadosBody = request.body
+
+    let result = await controllerArtista.atualizarArtista(dadosBody, idArtista, contentType)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+// endpoint para deletar um artista
+app.delete('/v1/controle-musicas/artista/:id', cors(), async function(request, response){
+    let idArtista = request.params.id
+
+    let result = await controllerArtista.excluirArtista(idArtista)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+//endpoint para inserir uma banda
+app.post('/v1/controle-musicas/banda', cors(), bodyParserJSON, async function(request, response){
+
+    //recebe o content type da requisição para validar o formato de dados
+    let contentType = request.headers['content-type']
+
+    //recebe os dados encaminhados no body da requisição
+    let dadosBody = request.body
+
+    let result = await controllerBanda.inserirBanda(dadosBody, contentType)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+//endpoint para retornar lista de banda
+app.get('/v1/controle-musicas/banda', cors(), async function(request, response){
+
+    //chama a função para retornar uma lista de banda
+    let result = await controllerBanda.listarBanda()
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+//endpoint para buscar um banda pelo id
+app.get('/v1/controle-musicas/banda/:id', cors(), async function(request, response){
+
+    let idBanda = request.params.id
+
+    let result = await controllerBanda.buscarBanda(idBanda)
+
+    response.status(result.status_code)
+    response.json(result)
+
+})
+
+//endpoint pr atualizar um banda
+app.put('/v1/controle-musicas/banda/:id', cors(), bodyParserJSON, async function(request, response){
+    //recebe o content type da requisição
+    let contentType = request.headers['content-type']
+
+    //recebe o id da música
+    let idBanda = request.params.id
+
+    //recebe os dados do body
+    let dadosBody = request.body
+
+    let result = await controllerBanda.atualizarBanda(dadosBody, idBanda, contentType)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+// endpoint para deletar um banda
+app.delete('/v1/controle-musicas/banda/:id', cors(), async function(request, response){
+    let idBanda = request.params.id
+
+    let result = await controllerBanda.excluirBanda(idBanda)
+
+    response.status(result.status_code)
+    response.json(result)
 })
 
 app.listen(8080, function(){

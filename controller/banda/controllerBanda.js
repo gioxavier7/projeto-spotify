@@ -1,6 +1,6 @@
 /**
-  * Objetivo: Controller responsável pela manipilação do CRUD de dados de artista
-  * Data: 17/04/2025
+  * Objetivo: Controller responsável pela manipilação do CRUD de dados de bandas
+  * Data: 24/04/2025
   * Dev: Giovanna
   * Versão: 1.0
   */
@@ -9,23 +9,23 @@
 const MESSAGE = require('../../modulo/config.js')
  
 //import do arquivo DAO de música para manipular o db
-const artistaDAO = require('../../model/dao/artista.js')
+const bandaDAO = require('../../model/dao/banda.js')
 const { json } = require('body-parser')
 
-//funcao pra inserir um novo artista
-const inserirArtista = async function(artista, contentType){
+//funcao pra inserir uma nova banda
+const inserirBanda = async function(banda, contentType){
     try {
         if(String(contentType).toLowerCase() == 'application/json')
         {
             if(
-                artista.nome == undefined || artista.nome == '' || artista.nome == null || artista.nome.length > 50 ||
-                artista.biografia == undefined ||  artista.biografia.length > 250
+                banda.nome == undefined || banda.nome == '' || banda.nome == null || banda.nome.length > 45 ||
+                banda.integrantes == undefined ||  banda.integrantes.length > 200
             ){
                 return MESSAGE.ERROR_REQUIRE_FIELDS //400
             }else{
-                let resultArtista = await artistaDAO.insertArtista(artista)
+                let resultBanda = await bandaDAO.insertBanda(banda)
 
-                if(resultArtista)
+                if(resultBanda)
                     return MESSAGE.SUCCESS_CREATED_ITEM //201
                 else
                     return MESSAGE.ERROR_INTERNAL_SERVER_MODEL //500
@@ -38,22 +38,23 @@ const inserirArtista = async function(artista, contentType){
     }
 }
 
-const listarArtista = async function(){
+//funcao pra listar todos as bandas
+const listarBanda = async function(){
     try {
-        let dadosArtista = {}
+        let dadosBanda = {}
 
         //chamar a função que retorna os artistas
-        let resultArtista = await artistaDAO.selectAllArtista()
+        let resultBanda = await bandaDAO.selectAllBanda()
 
-        if(resultArtista != false || typeof(resultArtista) == 'object')
+        if(resultBanda != false || typeof(resultBanda) == 'object')
         {
-            //criando um objeto JSON para retornar a lista de Artistas
-            if(resultArtista.length > 0){
-                dadosArtista.status = true
-                dadosArtista.status_code = 200
-                dadosArtista.item = resultArtista.length
-                dadosArtista.artista = resultArtista
-                return dadosArtista //200
+            //criando um objeto JSON para retornar a lista de bandas
+            if(resultBanda.length > 0){
+                dadosBanda.status = true
+                dadosBanda.status_code = 200
+                dadosBanda.item = resultBanda.length
+                dadosBanda.banda = resultBanda
+                return dadosBanda //200
             }else{
                 return MESSAGE.ERROR_NOT_FOUND //404
             }
@@ -66,21 +67,21 @@ const listarArtista = async function(){
     }
 }
 
-//função para listar um artista pelo ID
-const buscarArtista = async function(id){
+//função para listar uma banda pelo ID
+const buscarBanda = async function(id){
     try {
         if(id == '' || id == undefined || id == null || isNaN(id) || id <= 0){
             return MESSAGE.ERROR_REQUIRE_FIELDS //400
         }else{
-            let dadosArtista = {}
-            let resultArtista = await artistaDAO.selectByIdArtista(id)
+            let dadosBanda = {}
+            let resultBanda = await bandaDAO.selectByIdBanda(id)
 
-            if(resultArtista != false || typeof(resultArtista) == 'object'){
-                if(resultArtista.length > 0){
-                    dadosArtista.status = true
-                    dadosArtista.status_code = 200
-                    dadosArtista.artista = resultArtista
-                    return dadosArtista //200
+            if(resultBanda != false || typeof(resultBanda) == 'object'){
+                if(resultBanda.length > 0){
+                    dadosBanda.status = true
+                    dadosBanda.status_code = 200
+                    dadosBanda.banda = resultBanda
+                    return dadosBanda //200
                 }else{
                     return MESSAGE.ERROR_NOT_FOUND //404
                 }
@@ -93,32 +94,32 @@ const buscarArtista = async function(id){
     }
 }
 
-//função para atualizar um artista existente
-const atualizarArtista = async function(artista, id, contentType){
+//função para atualizar uma banda existente
+const atualizarBanda = async function(banda, id, contentType){
     try {
         if(String(contentType).toLowerCase() == 'application/json')
         {
             if(
-                artista.nome == undefined || artista.nome == '' || artista.nome == null || artista.nome.length > 50 ||
-                artista.biografia == undefined ||  artista.biografia.length > 250 ||
+                banda.nome == undefined || banda.nome == '' || banda.nome == null || banda.nome.length > 45 ||
+                banda.integrantes == undefined ||  banda.integrantes.length > 200 ||
                 id == '' || id == undefined || id == null || isNaN(id) || id <= 0
             ){
                 return MESSAGE.ERROR_REQUIRE_FIELDS //400
             }else{
                 //validar se o id existe no db
-                let resultArtista = await buscarArtista(id)
+                let resultBanda = await buscarBanda(id)
 
-                if(resultArtista.status_code == 200){
+                if(resultBanda.status_code == 200){
                     //update
-                    artista.id = id //adiciona o atributo id no json e e coloca o id da artista que chegou na controller
-                    let result = await artistaDAO.updateArtista(artista)
+                    banda.id = id //adiciona o atributo id no json e e coloca o id da banda que chegou na controller
+                    let result = await bandaDAO.updateBanda(banda)
 
                     if(result){
                         return MESSAGE.SUCCESS_UPDATED_ITEM //200
                     }else{
                         return MESSAGE.ERROR_INTERNAL_SERVER_MODEL //500
                     }
-                }else if(resultArtista.status_code == 404){
+                }else if(resultBanda.status_code == 404){
                     return MESSAGE.ERROR_NOT_FOUND //404
                 }else{
                     return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER //500
@@ -132,24 +133,24 @@ const atualizarArtista = async function(artista, id, contentType){
     }
 }
 
-//função para excluir um artista existente
-const excluirArtista = async function(id){
+//função para excluir uma banda existente
+const excluirBanda = async function(id){
     try {
         if(id == '' || id == undefined || id == null || isNaN(id) || id <= 0){
             return MESSAGE.ERROR_REQUIRE_FIELDS //400
         }else{
             //validar se o id existe
-            let resultArtista = await buscarArtista(id)
+            let resultBanda = await buscarBanda(id)
 
-            if(resultArtista.status_code == 200){
+            if(resultBanda.status_code == 200){
                 //delete
-                let result = await artistaDAO.deleteArtista(id)
+                let result = await bandaDAO.deleteBanda(id)
                 if(result){
                     return MESSAGE.SUCCESS_DELETED_ITEM //200
                 }else{
                     return MESSAGE.ERROR_INTERNAL_SERVER_MODEL //500
                 }
-            }else if(resultArtista.status_code == 404){
+            }else if(resultBanda.status_code == 404){
                 return MESSAGE.ERROR_NOT_FOUND //404
             }else{
                 return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER //500
@@ -161,9 +162,9 @@ const excluirArtista = async function(id){
 }
 
 module.exports = {
-    inserirArtista,
-    listarArtista,
-    buscarArtista,
-    atualizarArtista,
-    excluirArtista
+    inserirBanda,
+    listarBanda,
+    buscarBanda,
+    atualizarBanda,
+    excluirBanda
 }
