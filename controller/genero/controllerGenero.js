@@ -99,7 +99,8 @@ const atualizarGenero = async function(genero, id, contentType){
         if(String(contentType).toLowerCase() == 'application/json')
         {
             if(
-                genero.nome == undefined || genero.nome == '' || genero.nome == null || genero.nome.length > 50
+                genero.tipo == undefined || genero.tipo == '' || genero.tipo == null || genero.tipo.length > 50 ||
+                id == '' || id == undefined || id == null || isNaN(id) || id <= 0
             ){
                 return MESSAGE.ERROR_REQUIRE_FIELDS //400
             }else{

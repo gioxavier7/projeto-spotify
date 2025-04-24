@@ -38,7 +38,7 @@ const insertGenero = async function(genero){
 //função para atualizar um genero existente no banco de dados
 const updateGenero = async function(genero){
     try {
-        let sql = `update tbl_genero set nome= '${genero.tipo}'
+        let sql = `update tbl_genero set tipo= '${genero.tipo}'
                                         where id=${genero.id}`
                         
         let result = await prisma.$executeRawUnsafe(sql)

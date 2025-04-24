@@ -33,6 +33,7 @@ const controllerUsuario = require('./controller/usuario/controllerUsuario.js')
 const controllerArtista = require('./controller/artista/controllerArtista.js')
 const controllerBanda = require('./controller/banda/controllerBanda.js')
 const controllerPlano = require('./controller/plano/controllerPlano.js')
+const controllerGenero = require('./controller/genero/controllerGenero.js')
 
 
 //criando formato de dados que será recebido no body da requisição (POST/PUT)
@@ -370,7 +371,69 @@ app.delete('/v1/controle-musicas/plano/:id', cors(), async function(request, res
     response.json(result)
 })
 
+//endpoint para inserir um genero
+app.post('/v1/controle-musicas/genero', cors(), bodyParserJSON, async function(request, response){
 
+    //recebe o content type da requisição para validar o formato de dados
+    let contentType = request.headers['content-type']
+
+    //recebe os dados encaminhados no body da requisição
+    let dadosBody = request.body
+
+    let result = await controllerGenero.inserirGenero(dadosBody, contentType)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+//endpoint para retornar lista de genero
+app.get('/v1/controle-musicas/genero', cors(), async function(request, response){
+
+    //chama a função para retornar uma lista de genero
+    let result = await controllerGenero.listarGenero()
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+//endpoint para buscar um genero pelo id
+app.get('/v1/controle-musicas/genero/:id', cors(), async function(request, response){
+
+    let idGenero = request.params.id
+
+    let result = await controllerGenero.buscarGenero(idGenero)
+
+    response.status(result.status_code)
+    response.json(result)
+
+})
+
+//endpoint pr atualizar um Genero
+app.put('/v1/controle-musicas/genero/:id', cors(), bodyParserJSON, async function(request, response){
+    //recebe o content type da requisição
+    let contentType = request.headers['content-type']
+
+    //recebe o id da música
+    let idGenero = request.params.id
+
+    //recebe os dados do body
+    let dadosBody = request.body
+
+    let result = await controllerGenero.atualizarGenero(dadosBody, idGenero, contentType)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+// endpoint para deletar um Genero
+app.delete('/v1/controle-musicas/genero/:id', cors(), async function(request, response){
+    let idGenero = request.params.id
+
+    let result = await controllerGenero.excluirGenero(idGenero)
+
+    response.status(result.status_code)
+    response.json(result)
+})
 
 app.listen(8080, function(){
     console.log('Servidor aguardando novas requisições...')
