@@ -34,6 +34,7 @@ const controllerArtista = require('./controller/artista/controllerArtista.js')
 const controllerBanda = require('./controller/banda/controllerBanda.js')
 const controllerPlano = require('./controller/plano/controllerPlano.js')
 const controllerGenero = require('./controller/genero/controllerGenero.js')
+const controllerTipoPagamento = require('./controller/tipoPagamento/controllerTipoPagamento.js')
 
 
 //criando formato de dados que será recebido no body da requisição (POST/PUT)
@@ -430,6 +431,70 @@ app.delete('/v1/controle-musicas/genero/:id', cors(), async function(request, re
     let idGenero = request.params.id
 
     let result = await controllerGenero.excluirGenero(idGenero)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+//endpoint para inserir um tipo pagamento
+app.post('/v1/controle-musicas/tipo-pagamento', cors(), bodyParserJSON, async function(request, response){
+
+    //recebe o content type da requisição para validar o formato de dados
+    let contentType = request.headers['content-type']
+
+    //recebe os dados encaminhados no body da requisição
+    let dadosBody = request.body
+
+    let result = await controllerTipoPagamento.inserirTipoPagamento(dadosBody, contentType)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+//endpoint para retornar lista de TipoPagamento
+app.get('/v1/controle-musicas/tipo-pagamento', cors(), async function(request, response){
+
+    //chama a função para retornar uma lista de TipoPagamento
+    let result = await controllerTipoPagamento.listarTipoPagamento()
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+//endpoint para buscar um tipo pagamento pelo id
+app.get('/v1/controle-musicas/tipo-pagamento/:id', cors(), async function(request, response){
+
+    let idTipoPagamento = request.params.id
+
+    let result = await controllerTipoPagamento.buscarTipoPagamento(idTipoPagamento)
+
+    response.status(result.status_code)
+    response.json(result)
+
+})
+
+//endpoint pr atualizar um tipo pagamento
+app.put('/v1/controle-musicas/tipo-pagamento/:id', cors(), bodyParserJSON, async function(request, response){
+    //recebe o content type da requisição
+    let contentType = request.headers['content-type']
+
+    //recebe o id da música
+    let idTipoPagamento = request.params.id
+
+    //recebe os dados do body
+    let dadosBody = request.body
+
+    let result = await controllerTipoPagamento.atualizarTipoPagamento(dadosBody, idTipoPagamento, contentType)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+// endpoint para deletar um tipo pagamento
+app.delete('/v1/controle-musicas/tipo-pagamento/:id', cors(), async function(request, response){
+    let idTipoPagamento = request.params.id
+
+    let result = await controllerTipoPagamento.excluirTipoPagamento(idTipoPagamento)
 
     response.status(result.status_code)
     response.json(result)
