@@ -26,6 +26,33 @@ create table tbl_artista(
   biografia varchar(250)
 );
 
+create table tbl_banda(
+  id int primary key auto_increment,
+  nome varchar(45) not null,
+  integrantes varchar(200) not null
+);
+
+create table tbl_genero(
+  id int primary key auto_increment,
+  tipo varchar(50) not null
+);
+
+create table tbl_plano(
+  id int primary key auto_increment,
+  nome varchar(45) not null,
+  preco varchar(10) not null,
+  beneficios varchar(150) not null
+);
+
+create table tbl_tipo_pagamento(
+  id int primary key auto_increment,
+  tipo_pagamento varchar(45) not null
+);
+
+
+
+
 show tables;
 desc tbl_musica;
 select * from tbl_musica;
+select id from tbl_musica;

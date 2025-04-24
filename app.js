@@ -32,6 +32,7 @@ const controllerMusica = require('./controller/musica/controllerMusica.js')
 const controllerUsuario = require('./controller/usuario/controllerUsuario.js')
 const controllerArtista = require('./controller/artista/controllerArtista.js')
 const controllerBanda = require('./controller/banda/controllerBanda.js')
+const controllerPlano = require('./controller/plano/controllerPlano.js')
 
 
 //criando formato de dados que será recebido no body da requisição (POST/PUT)
@@ -202,7 +203,7 @@ app.get('/v1/controle-musicas/artista', cors(), async function(request, response
     response.json(result)
 })
 
-//endpoint para buscar um usuario pelo id
+//endpoint para buscar um artista pelo id
 app.get('/v1/controle-musicas/artista/:id', cors(), async function(request, response){
 
     let idArtista = request.params.id
@@ -304,6 +305,72 @@ app.delete('/v1/controle-musicas/banda/:id', cors(), async function(request, res
     response.status(result.status_code)
     response.json(result)
 })
+
+//endpoint para inserir um plano
+app.post('/v1/controle-musicas/plano', cors(), bodyParserJSON, async function(request, response){
+
+    //recebe o content type da requisição para validar o formato de dados
+    let contentType = request.headers['content-type']
+
+    //recebe os dados encaminhados no body da requisição
+    let dadosBody = request.body
+
+    let result = await controllerPlano.inserirPlano(dadosBody, contentType)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+//endpoint para retornar lista de plano
+app.get('/v1/controle-musicas/plano', cors(), async function(request, response){
+
+    //chama a função para retornar uma lista de plano
+    let result = await controllerPlano.listarPlano()
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+//endpoint para buscar um plano pelo id
+app.get('/v1/controle-musicas/plano/:id', cors(), async function(request, response){
+
+    let idPlano = request.params.id
+
+    let result = await controllerPlano.buscarPlano(idPlano)
+
+    response.status(result.status_code)
+    response.json(result)
+
+})
+
+//endpoint pr atualizar um Plano
+app.put('/v1/controle-musicas/plano/:id', cors(), bodyParserJSON, async function(request, response){
+    //recebe o content type da requisição
+    let contentType = request.headers['content-type']
+
+    //recebe o id da música
+    let idPlano = request.params.id
+
+    //recebe os dados do body
+    let dadosBody = request.body
+
+    let result = await controllerPlano.atualizarPlano(dadosBody, idPlano, contentType)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+// endpoint para deletar um Plano
+app.delete('/v1/controle-musicas/plano/:id', cors(), async function(request, response){
+    let idPlano = request.params.id
+
+    let result = await controllerPlano.excluirPlano(idPlano)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+
 
 app.listen(8080, function(){
     console.log('Servidor aguardando novas requisições...')
