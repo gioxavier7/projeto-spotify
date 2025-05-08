@@ -117,7 +117,7 @@ const atualizarGenero = async function(genero, id, contentType){
                     }else{
                         return MESSAGE.ERROR_INTERNAL_SERVER_MODEL //500
                     }
-                }else if(resultPlano.status_code == 404){
+                }else if(resultGenero.status_code == 404){
                     return MESSAGE.ERROR_NOT_FOUND //404
                 }else{
                     return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER //500
@@ -148,7 +148,7 @@ const excluirGenero = async function(id){
                 }else{
                     return MESSAGE.ERROR_INTERNAL_SERVER_MODEL //500
                 }
-            }else if(resultBanda.status_code == 404){
+            }else if(resultGenero.status_code == 404){
                 return MESSAGE.ERROR_NOT_FOUND //404
             }else{
                 return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER //500

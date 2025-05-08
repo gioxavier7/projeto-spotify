@@ -35,6 +35,7 @@ const controllerBanda = require('./controller/banda/controllerBanda.js')
 const controllerPlano = require('./controller/plano/controllerPlano.js')
 const controllerGenero = require('./controller/genero/controllerGenero.js')
 const controllerTipoPagamento = require('./controller/tipoPagamento/controllerTipoPagamento.js')
+const controllerDataVigencia = require('./controller/data_vigencia/controllerDataVigencia.js')
 
 
 //criando formato de dados que será recebido no body da requisição (POST/PUT)
@@ -495,6 +496,70 @@ app.delete('/v1/controle-musicas/tipo-pagamento/:id', cors(), async function(req
     let idTipoPagamento = request.params.id
 
     let result = await controllerTipoPagamento.excluirTipoPagamento(idTipoPagamento)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+//endpoint para inserir uma data vigencia
+app.post('/v1/controle-musicas/data-vigencia', cors(), bodyParserJSON, async function(request, response){
+
+    //recebe o content type da requisição para validar o formato de dados
+    let contentType = request.headers['content-type']
+
+    //recebe os dados encaminhados no body da requisição
+    let dadosBody = request.body
+
+    let result = await controllerDataVigencia.inserirDataVigencia(dadosBody, contentType)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+//endpoint para retornar lista de DataVigencia
+app.get('/v1/controle-musicas/data-vigencia', cors(), async function(request, response){
+
+    //chama a função para retornar uma lista de DataVigencia
+    let result = await controllerDataVigencia.listarDataVigencia()
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+//endpoint para buscar um DataVigencia pelo id
+app.get('/v1/controle-musicas/data-vigencia/:id', cors(), async function(request, response){
+
+    let idDataVigencia = request.params.id
+
+    let result = await controllerDataVigencia.buscarDataVigencia(idDataVigencia)
+
+    response.status(result.status_code)
+    response.json(result)
+
+})
+
+//endpoint pr atualizar um DataVigencia
+app.put('/v1/controle-musicas/data-vigencia/:id', cors(), bodyParserJSON, async function(request, response){
+    //recebe o content type da requisição
+    let contentType = request.headers['content-type']
+
+    //recebe o id da música
+    let idDataVigencia = request.params.id
+
+    //recebe os dados do body
+    let dadosBody = request.body
+
+    let result = await controllerDataVigencia.atualizarDataVigencia(dadosBody, idDataVigencia, contentType)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+// endpoint para deletar um DataVigencia
+app.delete('/v1/controle-musicas/data-vigencia/:id', cors(), async function(request, response){
+    let idDataVigencia = request.params.id
+
+    let result = await controllerDataVigencia.excluirDataVigencia(idDataVigencia)
 
     response.status(result.status_code)
     response.json(result)

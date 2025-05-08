@@ -152,7 +152,7 @@ const excluirPlano = async function(id){
                 }else{
                     return MESSAGE.ERROR_INTERNAL_SERVER_MODEL //500
                 }
-            }else if(resultBanda.status_code == 404){
+            }else if(resultPlano.status_code == 404){
                 return MESSAGE.ERROR_NOT_FOUND //404
             }else{
                 return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER //500
