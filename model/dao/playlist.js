@@ -16,12 +16,11 @@ const insertPlaylist = async function(playlist){
     try {
         let sql = `insert into tbl_playlist(
                                             titulo,
-                                            duracao,
-                                            descricao
+                                            descricao,
+                                            id_usuario
                                             )
                                       values(
                                              '${playlist.titulo}',
-                                             '${playlist.duracao}',
                                              '${playlist.descricao}',
                                              '${playlist.id_usuario}'
                                              )`
@@ -44,8 +43,7 @@ const insertPlaylist = async function(playlist){
 const updatePlaylist = async function(playlist){
     try {
         let sql = `update tbl_playlist set titulo= '${playlist.titulo}',
-                                            duracao= '${playlist.duracao}',
-                                            descicao= '${playlist.descicao}',
+                                            descricao= '${playlist.descricao}',
                                             id_usuario= '${playlist.id_usuario}'
                                         where id=${playlist.id}`
                         

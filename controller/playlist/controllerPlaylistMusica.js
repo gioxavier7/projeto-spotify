@@ -9,25 +9,21 @@
 const MESSAGE = require('../../modulo/config.js')
  
 //import do arquivo DAO de música para manipular o db
-const playlistDAO = require('../../model/dao/playlist.js')
+const playlistMusicaDAO = require('../../model/dao/playlist_musica.js')
 const { json } = require('body-parser')
 
-//Import das controlleres para criar as relações com a playlist
-const controllerUsuario = require('../usuario/controllerUsuario.js')
-
 //funcao pra inserir um novo playlist
-const inserirPlaylist = async function(playlist, contentType){
+const inserirPlaylist = async function(playlistMusica, contentType){
     try {
         if(String(contentType).toLowerCase() == 'application/json')
         {
             if(
-                playlist.titulo == undefined || playlist.titulo == '' || playlist.titulo == null || playlist.titulo.length > 50 ||
-                playlist.descricao == undefined || playlist.descricao == '' || playlist.descricao == null || playlist.descricao.length > 100 ||
-                playlist.id_usuario == undefined || playlist.id_usuario == ''
+                playlistMusica.id_playlist == '' || playlistMusica == null || playlistMusica == undefined || isNaN(playlistMusica.id_playlist) || playlistMusica.id_playlist <= 0 ||
+                playlistMusica.id_musica == '' || playlistMusica == null || playlistMusica == undefined || isNaN(playlistMusica.id_musica) || playlistMusica.id_musica <= 0
             ){
                 return MESSAGE.ERROR_REQUIRE_FIELDS //400
             }else{
-                let resultPlaylist = await playlistDAO.insertPlaylist(playlist)
+                let resultPlaylist = await playlistMusicaDAO.insertPlaylist(playlistMusica)
 
                 if(resultPlaylist)
                     return MESSAGE.SUCCESS_CREATED_ITEM //201
@@ -42,17 +38,14 @@ const inserirPlaylist = async function(playlist, contentType){
     }
 }
  // funcao pra tratar o retorno de uma lista de playlist do dao
-const listarPlaylist = async function(){
+const listarPlaylistMusica = async function(){
     try {
-
-        // objeto do tipo array pra utilizar no foreach pra carregar os dados da playlist e do usuario
-        const arrayPlaylist = []
 
         // objeto json
         let dadosPlaylist = {}
 
-        //chamar a função que retorna as musicas
-        let resultPlaylist = await playlistDAO.selectAllPlaylist()
+        //chamar a função que retorna as playlist
+        let resultPlaylist = await playlistMusicaDAO.selectAllPlaylistMusica()
 
         if(resultPlaylist != false || typeof(resultPlaylist) == 'object')
         {
@@ -61,23 +54,7 @@ const listarPlaylist = async function(){
                 dadosPlaylist.status = true
                 dadosPlaylist.status_code = 200
                 dadosPlaylist.item = resultPlaylist.length
-                
-                // for of pra trabalhar com requisição async e await
-                for(itemPlaylist of resultPlaylist){
-                    // busca os dados do usuarui na controller usuario utilizando o id do usuario (chave estrangeira)
-                    let dadosUsuario = await controllerUsuario.buscarUsuario(itemPlaylist.id_usuario)
-
-                    //adicionando um atributo "usuario" no json de playlists
-                    itemPlaylist.usuario = dadosUsuario.usuario
-
-                    //remove o atributo id_usuario do json de playlist, pois ja tem o id dentro dos dados de usuario
-                    delete itemPlaylist.id_usuario
-
-                    //adiciona o json do filme, agoa com os dados de usuario em um array
-                    arrayPlaylist.push(itemPlaylist)
-                }
-                //adiciona o novo array de playlist o json pra retornar ao app
-                dadosPlaylist.playlist = arrayPlaylist
+                dadosPlaylist.musica = resultPlaylist
 
                 return dadosPlaylist
             }else{
@@ -92,41 +69,22 @@ const listarPlaylist = async function(){
     }
 }
 
-//função para listar um Playlist pelo ID
-const buscarPlaylist = async function(id){
+//função para tratar o retorno de uma playlist filtrando pelo id do dao
+const buscarPlaylistMusica = async function(id){
     try {
-
-        let arrayPlaylist = []
-
         if(id == '' || id == undefined || id == null || isNaN(id) || id <= 0){
             return MESSAGE.ERROR_REQUIRE_FIELDS //400
         }else{
             let dadosPlaylist = {}
-            let resultPlaylist = await playlistDAO.selectByIdPlaylist(id)
+            let resultPlaylist = await playlistMusicaDAO.selectByIdPlaylistMusica(parseInt(id))
 
             if(resultPlaylist != false || typeof(resultPlaylist) == 'object'){
                 if(resultPlaylist.length > 0){
                     dadosPlaylist.status = true
                     dadosPlaylist.status_code = 200
-                    
-                // for of pra trabalhar com requisição async e await
-                for(itemPlaylist of resultPlaylist){
-                    // busca os dados do usuarui na controller usuario utilizando o id do usuario (chave estrangeira)
-                    let dadosUsuario = await controllerUsuario.buscarUsuario(itemPlaylist.id_usuario)
+                    dadosPlaylist.playlist = resultPlaylist
 
-                    //adicionando um atributo "usuario" no json de playlists
-                    itemPlaylist.usuario = dadosUsuario.usuario
-
-                    //remove o atributo id_usuario do json de playlist, pois ja tem o id dentro dos dados de usuario
-                    delete itemPlaylist.id_usuario
-
-                    //adiciona o json do filme, agoa com os dados de usuario em um array
-                    arrayPlaylist.push(itemPlaylist)
-                }
-                //adiciona o novo array de playlist o json pra retornar ao app
-                dadosPlaylist.playlist = arrayPlaylist
-
-                return dadosPlaylist
+                    return dadosPlaylist
                 }else{
                     return MESSAGE.ERROR_NOT_FOUND //404
                 }
@@ -140,25 +98,24 @@ const buscarPlaylist = async function(id){
 }
 
 //função para atualizar um playlist existente
-const atualizarPlaylist = async function(playlist, id, contentType){
+const atualizarPlaylistMusica = async function(playlistMusica, id, contentType){
     try {
         if(String(contentType).toLowerCase() == 'application/json')
         {
             if(
-                playlist.titulo == undefined || playlist.titulo == '' || playlist.titulo == null || playlist.titulo.length > 100 ||
-                playlist.descricao == undefined || playlist.descricao == '' || playlist.descricao == null || playlist.descricao.length > 100 ||
-                playlist.id_usuario == undefined || playlist.id_usuario == '' ||
-                id == '' || id == undefined || id == null || isNaN(id) || id <= 0
+                id == '' || id == undefined || id == null || isNaN(id) || id <= 0 ||
+                playlistMusica.id_playlist == '' || playlistMusica.id_playlist == undefined || playlistMusica.id_playlist == null || isNaN(playlistMusica.id_playlist) || playlistMusica.id_playlist <= 0 ||
+                playlistMusica.id_musica == '' || playlistMusica.id_musica == undefined || playlistMusica.id_musica == null || isNaN(playlistMusica.id_musica) || playlistMusica.id_musica <= 0
             ){
                 return MESSAGE.ERROR_REQUIRE_FIELDS //400
             }else{
                 //validar se o id existe no db
-                let resultPlaylist = await buscarPlaylist(id)
+                let resultPlaylist = await playlistMusicaDAO.selectByIdPlaylistMusica(parseInt(id))
 
                 if(resultPlaylist.status_code == 200){
                     //update
-                    playlist.id = id //adiciona o atributo id no json e e coloca o id da música que chegou na controller
-                    let result = await playlistDAO.updatePlaylist(playlist)
+                    playlistMusica.id = id //adiciona o atributo id no json e e coloca o id da música que chegou na controller
+                    let result = await playlistMusicaDAO.updatePlaylist(playlistMusica)
 
                     if(result){
                         return MESSAGE.SUCCESS_UPDATED_ITEM //200
@@ -180,17 +137,17 @@ const atualizarPlaylist = async function(playlist, id, contentType){
 }
 
 //função para excluir uma playlist existente
-const excluirPlaylist = async function(id){
+const excluirPlaylistMusica = async function(id){
     try {
         if(id == '' || id == undefined || id == null || isNaN(id) || id <= 0){
             return MESSAGE.ERROR_REQUIRE_FIELDS //400
         }else{
             // validar se o ID existe
-            let resultPlaylist = await buscarPlaylist(id)
+            let resultPlaylist = await playlistMusicaDAO.selectByIdPlaylistMusica(parseInt(id))
 
             if(resultPlaylist.status_code == 200){
                 // delete do user
-                let result = await playlistDAO.deletePlaylist(id)
+                let result = await playlistMusicaDAO.deletePlaylist(id)
                 if(result){
                     return MESSAGE.SUCCESS_DELETED_ITEM //200
                 }else{
@@ -207,10 +164,41 @@ const excluirPlaylist = async function(id){
     }
 }
 
+const buscarMusicaPorPlaylist = async function(idPlaylist){
+    try {
+        if(idPlaylist == '' || idPlaylist == undefined || idPlaylist == null || isNaN(idPlaylist) || idPlaylist <=0){
+            return MESSAGE.ERROR_REQUIRE_FIELDS //400
+        }else{
+            let dadosPlaylist = {}
+
+            let resultPlaylist = await playlistMusicaDAO.selectMusicaByIdPlaylist(parseInt(idPlaylist))
+            
+            if(resultPlaylist != false || typeof(resultPlaylist) == 'object'){
+                if(resultPlaylist.length > 0){
+                     //Criando um JSON de retorno de dados para a API
+                    dadosPlaylist.status = true
+                    dadosPlaylist.status_code = 200
+                    dadosPlaylist.musica = resultPlaylist
+
+                    return dadosPlaylist //200
+                }else{
+                    return MESSAGE.ERROR_NOT_FOUND //404
+                }
+            }else{
+                return MESSAGE.ERROR_INTERNAL_SERVER_MODEL //500
+            }
+        }
+
+    } catch (error) {
+        return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER //500
+    }
+}
+
 module.exports = {
     inserirPlaylist,
-    listarPlaylist,
-    buscarPlaylist,
-    atualizarPlaylist,
-    excluirPlaylist
+    listarPlaylistMusica,
+    buscarPlaylistMusica,
+    atualizarPlaylistMusica,
+    excluirPlaylistMusica,
+    buscarMusicaPorPlaylist
 }
