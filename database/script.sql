@@ -49,7 +49,27 @@ create table tbl_tipo_pagamento(
   tipo_pagamento varchar(45) not null
 );
 
+create table tbl_data_vigencia(
+  id int primary key auto_increment,
+  data_inicio DATE,
+  data_termino DATE
+);
 
+create table tbl_playlist(
+  id int primary key auto_increment,
+  titulo varchar(100),
+  descricao varchar(100),
+  id_usuario int,
+  foreign key (id_usuario) references tbl_usuario(id)
+);
+
+create table tbl_playlist_musica(
+  id int primary key auto_increment,
+  id_playlist int,
+  id_musica int,
+  foreign key(id_playlist) references tbl_playlist(id),
+  foreign key(id_musica) references tbl_musica(id)
+);
 
 
 show tables;

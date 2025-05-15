@@ -630,7 +630,69 @@ app.delete('/v1/controle-musicas/playlist/:id', cors(), async function(request, 
     response.json(result)
 })
 
+//endpoint para inserir uma playlist
+app.post('/v1/controle-musicas/playlist-musica', cors(), bodyParserJSON, async function(request, response){
 
+    //recebe o content type da requisição para validar o formato de dados
+    let contentType = request.headers['content-type']
+
+    //recebe os dados encaminhados no body da requisição
+    let dadosBody = request.body
+
+    let result = await controllerPlaylist.inserirPlaylist(dadosBody, contentType)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+//endpoint para retornar lista de Playlist
+app.get('/v1/controle-musicas/playlist-musica', cors(), async function(request, response){
+
+    //chama a função para retornar uma lista de Playlist
+    let result = await controllerPlaylist.listarPlaylist()
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+//endpoint para buscar um Playlist pelo id
+app.get('/v1/controle-musicas/playlist-musica/:id', cors(), async function(request, response){
+
+    let idPlaylist = request.params.id
+
+    let result = await controllerPlaylist.buscarPlaylist(idPlaylist)
+
+    response.status(result.status_code)
+    response.json(result)
+
+})
+
+//endpoint pr atualizar um Playlist
+app.put('/v1/controle-musicas/playlist-musica/:id', cors(), bodyParserJSON, async function(request, response){
+    //recebe o content type da requisição
+    let contentType = request.headers['content-type']
+
+    //recebe o id da música
+    let idPlaylist = request.params.id
+
+    //recebe os dados do body
+    let dadosBody = request.body
+
+    let result = await controllerPlaylist.atualizarPlaylist(dadosBody, idPlaylist, contentType)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+// endpoint para deletar um Playlist
+app.delete('/v1/controle-musicas/playlist-musica/:id', cors(), async function(request, response){
+    let idPlaylist = request.params.id
+
+    let result = await controllerPlaylist.excluirPlaylist(idPlaylist)
+
+    response.status(result.status_code)
+    response.json(result)
+})
 
 app.listen(8080, function(){
     console.log('Servidor aguardando novas requisições...')
