@@ -37,6 +37,7 @@ const controllerGenero = require('./controller/genero/controllerGenero.js')
 const controllerTipoPagamento = require('./controller/tipoPagamento/controllerTipoPagamento.js')
 const controllerDataVigencia = require('./controller/data_vigencia/controllerDataVigencia.js')
 const controllerPlaylist = require('./controller/playlist/controllerPlaylist.js')
+const controllerAlbum = require('./controller/album/controllerAlbum.js')
 
 
 //criando formato de dados que será recebido no body da requisição (POST/PUT)
@@ -689,6 +690,70 @@ app.delete('/v1/controle-musicas/playlist-musica/:id', cors(), async function(re
     let idPlaylist = request.params.id
 
     let result = await controllerPlaylist.excluirPlaylist(idPlaylist)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+//endpoint para inserir um Album
+app.post('/v1/controle-musicas/album', cors(), bodyParserJSON, async function(request, response){
+
+    //recebe o content type da requisição para validar o formato de dados
+    let contentType = request.headers['content-type']
+
+    //recebe os dados encaminhados no body da requisição
+    let dadosBody = request.body
+
+    let result = await controllerAlbum.inserirAlbum(dadosBody, contentType)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+//endpoint para retornar lista de Album
+app.get('/v1/controle-musicas/album', cors(), async function(request, response){
+
+    //chama a função para retornar uma lista de Album
+    let result = await controllerAlbum.listarAlbum()
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+//endpoint para buscar um Album pelo id
+app.get('/v1/controle-musicas/album/:id', cors(), async function(request, response){
+
+    let idAlbum = request.params.id
+
+    let result = await controllerAlbum.buscarAlbum(idAlbum)
+
+    response.status(result.status_code)
+    response.json(result)
+
+})
+
+//endpoint pr atualizar um Album
+app.put('/v1/controle-musicas/album/:id', cors(), bodyParserJSON, async function(request, response){
+    //recebe o content type da requisição
+    let contentType = request.headers['content-type']
+
+    //recebe o id da música
+    let idAlbum = request.params.id
+
+    //recebe os dados do body
+    let dadosBody = request.body
+
+    let result = await controllerAlbum.atualizarAlbum(dadosBody, idAlbum, contentType)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+// endpoint para deletar um Album
+app.delete('/v1/controle-musicas/album/:id', cors(), async function(request, response){
+    let idAlbum = request.params.id
+
+    let result = await controllerAlbum.excluirAlbum(idAlbum)
 
     response.status(result.status_code)
     response.json(result)

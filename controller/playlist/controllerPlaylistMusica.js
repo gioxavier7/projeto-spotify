@@ -23,7 +23,7 @@ const inserirPlaylist = async function(playlistMusica, contentType){
             ){
                 return MESSAGE.ERROR_REQUIRE_FIELDS //400
             }else{
-                let resultPlaylist = await playlistMusicaDAO.insertPlaylist(playlistMusica)
+                let resultPlaylist = await playlistMusicaDAO.insertPlaylistMusica(playlistMusica)
 
                 if(resultPlaylist)
                     return MESSAGE.SUCCESS_CREATED_ITEM //201
@@ -34,6 +34,8 @@ const inserirPlaylist = async function(playlistMusica, contentType){
             return MESSAGE.ERROR_CONTENT_TYPE //415
         }
     } catch (error) {
+        console.log(error);
+        
         return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER //500
     }
 }
@@ -54,7 +56,7 @@ const listarPlaylistMusica = async function(){
                 dadosPlaylist.status = true
                 dadosPlaylist.status_code = 200
                 dadosPlaylist.item = resultPlaylist.length
-                dadosPlaylist.musica = resultPlaylist
+                dadosPlaylist.musicas = resultPlaylist
 
                 return dadosPlaylist
             }else{
@@ -82,7 +84,7 @@ const buscarPlaylistMusica = async function(id){
                 if(resultPlaylist.length > 0){
                     dadosPlaylist.status = true
                     dadosPlaylist.status_code = 200
-                    dadosPlaylist.playlist = resultPlaylist
+                    dadosPlaylist.musicas = resultPlaylist
 
                     return dadosPlaylist
                 }else{
@@ -178,7 +180,7 @@ const buscarMusicaPorPlaylist = async function(idPlaylist){
                      //Criando um JSON de retorno de dados para a API
                     dadosPlaylist.status = true
                     dadosPlaylist.status_code = 200
-                    dadosPlaylist.musica = resultPlaylist
+                    dadosPlaylist.musicas = resultPlaylist
 
                     return dadosPlaylist //200
                 }else{

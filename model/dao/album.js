@@ -49,8 +49,9 @@ const updateAlbum = async function(album){
         let sql = `update tbl_album set titulo= '${album.titulo}',
                                             data_lancamento= '${album.data_lancamento}',
                                             foto_capa= '${album.foto_capa}',
-                                            duracao= '${album.duracao}'
-                                            id_banda= '${album.id_banda}'
+                                            duracao= '${album.duracao}',
+                                            id_banda= '${album.id_banda}',
+                                            link= '${album.link}'
 
                                         where id=${album.id}`
                         

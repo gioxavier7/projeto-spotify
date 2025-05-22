@@ -27,8 +27,12 @@ const insertPlaylist = async function(playlist){
 
         let result = await prisma.$executeRawUnsafe(sql)
 
-        if(result)
-            return true
+
+        if(result){
+            let select = 'SELECT * FROM tbl_playlist ORDER BY id DESC LIMIT 1'
+            let result = await prisma.$queryRawUnsafe(select)
+            return result[0]
+        }
         else
         return false
 
@@ -114,6 +118,8 @@ const selectByIdPlaylist = async function(id){
         return false
     }
 }
+
+
 
 module.exports = {
     insertPlaylist,
